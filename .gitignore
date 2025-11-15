@@ -1,5 +1,5 @@
 # ログファイル
-zeek-logs/
+zeek/logs/
 *.log
 
 # pcapファイル
