@@ -63,6 +63,10 @@ event new_connection(c: connection)
 			NOTICE([$note=SynFloodStart, $src=ip,
 				   $msg=fmt("Start of syn-flood against %s; sampling packets now", ip)]);
 
+			# ★ ここで current_victims[ip] を必ず初期化しておく
+            if ( ip !in current_victims )
+                current_victims[ip] = set();
+
 			add current_victims[ip][c$id$orig_h];
 
 			# Drop most packets to victim.
