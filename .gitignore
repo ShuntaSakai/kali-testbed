@@ -1,0 +1,10 @@
+# ログファイル
+zeek-logs/
+*.log
+
+# pcapファイル
+*.pcap
+
+# dockerなどの一時ファイル
+*.swp
+*~

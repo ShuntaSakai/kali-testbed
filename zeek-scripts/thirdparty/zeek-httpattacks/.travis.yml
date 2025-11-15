@@ -1,0 +1,10 @@
+---
+language: python
+
+dist: focal
+
+os:
+  - linux
+
+script:
+  - tests/travis.sh

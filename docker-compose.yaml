@@ -1,0 +1,44 @@
+services:
+  attacker:
+    build: ./attacker
+    container_name: attacker
+    command: tail -f /dev/null
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    networks:
+      testnet_static:
+        ipv4_address: 172.30.0.10
+    volumes:
+      - ./attacker/data:/workspace
+
+  victim:
+    build: ./victim
+    container_name: victim
+    command: tail -f /dev/null
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    networks:
+      testnet_static:
+        ipv4_address: 172.30.0.20
+    volumes:
+      - ./victim/data:/workspace
+
+  zeek:
+    image: zeek/zeek
+    container_name: zeek
+    command: tail -f /dev/null
+    networks:
+      testnet_static:
+    volumes:
+      - ./zeek-logs:/zeek-logs
+      - ./zeek-scripts:/zeek-scripts
+
+networks:
+  testnet_static:
+    driver: bridge
+    internal: true        # 外部ネットワークに出ない閉じた環境
+    ipam:
+      config:
+        - subnet: 172.30.0.0/24

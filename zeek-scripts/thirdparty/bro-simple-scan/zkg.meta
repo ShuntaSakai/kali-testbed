@@ -1,0 +1,8 @@
+[package]
+description = Simple, high performance tcp scan detection
+test_command = (cd testing && btest -d)
+script_dir = scripts
+tags = bro plugin, scan detection
+depends =
+  zeek >=3.0.0
+  ncsa/bro-is-darknet >=2.0
