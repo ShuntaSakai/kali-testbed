@@ -37,6 +37,7 @@ services:
     volumes:
       - ./zeek/logs:/zeek-logs
       - ./zeek/scripts:/zeek-scripts
+      - ./bin/zeek-color:/usr/local/bin/zeek-color
 
 networks:
   testnet_static:
