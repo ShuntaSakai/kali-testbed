@@ -10,6 +10,8 @@ RUN apt update && \
       hping3 \
       patator \
       nmap \
+      vim \
+      nano \
       && apt clean && rm -rf /var/lib/apt/lists/*
 
 # 作業ディレクトリ

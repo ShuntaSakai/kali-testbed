@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM zeek/zeek:latest
 
 RUN apt update && \
     apt install -y \
@@ -6,11 +6,8 @@ RUN apt update && \
       iputils-ping \
       net-tools \
       tcpdump \
-      python3 \
-      openssh-server \
-      vim \
+      less \
       nano \
+      vim \
       && apt clean && rm -rf /var/lib/apt/lists/*
-
-# 作業ディレクトリ
-WORKDIR /workspace
+RUN mkdir -p /zeek-logs /zeek-scripts

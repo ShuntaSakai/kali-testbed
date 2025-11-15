@@ -26,14 +26,17 @@ services:
       - ./victim/data:/workspace
 
   zeek:
-    image: zeek/zeek
+    build: ./zeek
     container_name: zeek
     command: tail -f /dev/null
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
     networks:
       testnet_static:
     volumes:
-      - ./zeek-logs:/zeek-logs
-      - ./zeek-scripts:/zeek-scripts
+      - ./zeek/logs:/zeek-logs
+      - ./zeek/scripts:/zeek-scripts
 
 networks:
   testnet_static:
