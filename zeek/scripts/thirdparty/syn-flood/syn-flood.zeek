@@ -56,12 +56,15 @@ event new_connection(c: connection)
 	if ( ++sample_count % SYNFLOOD_SAMPLE_RATE == 0 )
 		{
 		local ip = c$id$resp_h;
+		local msg = fmt("Start of syn-flood against %s; sampling packets now", ip);
 
 		if ( ++conn_attempts[ip] * SYNFLOOD_SAMPLE_RATE >
 		     SYNFLOOD_THRESHOLD )
 			{
-			NOTICE([$note=SynFloodStart, $src=ip,
-				   $msg=fmt("Start of syn-flood against %s; sampling packets now", ip)]);
+			NOTICE([$note=SynFloodStart, $src=ip, $msg=msg]);
+			# タグ付きの標準出力
+			print fmt("[SYN FLOOD START]  ts=%.6f victim=%s msg=\"%s\"",
+				network_time(), ip, msg);
 
 			# ★ ここで current_victims[ip] を必ず初期化しておく
             if ( ip !in current_victims )
@@ -82,16 +85,19 @@ event check_synflood()
 	{
 	for ( ip in current_victims )
 		{
+		local num = |current_victims[ip]|;
+		local msg = fmt("end of syn-flood against %s; stopping sampling", ip);
 		accumulated_conn_attempts[ip] =
 			accumulated_conn_attempts[ip] + conn_attempts[ip];
 
 		if ( conn_attempts[ip] * (1 / SYNFLOOD_VICTIM_SAMPLE_RATE) <
 		     SYNFLOOD_THRESHOLD )
 			{
-			NOTICE([$note=SynFloodEnd, $src=ip, $n=|current_victims[ip]|,
-				   $msg=fmt("end of syn-flood against %s; stopping sampling",
-					ip)]);
- 
+			NOTICE([$note=SynFloodEnd, $src=ip, $n=num, $msg=msg]);	
+			# タグ付きの標準出力
+			print fmt("[SYN FLOOD END]    ts=%.6f victim=%s n=%d msg=\"%s\"",
+				network_time(), ip, num, msg);
+
 			delete current_victims[ip];
 			#uninstall_dst_addr_filter(ip);
 			#uninstall_src_addr_filter(ip);
@@ -108,7 +114,6 @@ event report_synflood()
 		{
 		local est_num_conn = accumulated_conn_attempts[ip] *
 					(1 / SYNFLOOD_VICTIM_SAMPLE_RATE);
-
 		local interv: interval;
 
 		if ( interval_start != 0 )
@@ -116,9 +121,13 @@ event report_synflood()
 		else
 			interv = SYNFLOOD_INTERVAL;
 
-		NOTICE([$note=SynFloodStatus, $src=ip, $n=|current_victims[ip]|,
-			   $msg=fmt("syn-flood against %s; estimated %.0f connections in last %s",
-				    ip, est_num_conn, interv)]);
+		local num = |current_victims[ip]|;
+		local msg = fmt("syn-flood against %s; estimated %.0f connections in last %s",
+						ip, est_num_conn, interv);
+		NOTICE([$note=SynFloodStatus, $src=ip, $n=num, $msg=msg]);
+		# タグ付きの標準出力
+		print fmt("[SYN FLOOD STATUS] ts=%.6f victim=%s n=%d msg=\"%s\"",
+			network_time(), ip, num, msg);
 		}
 
 	clear_table(accumulated_conn_attempts);
