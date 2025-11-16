@@ -106,8 +106,12 @@ Zeek ログのカラー表示ツールをホスト側から提供
 ---
 
 ## 🧪 使用例
-
-これから掲載予定
+### リアルタイム監視用スクリプト
+```bash
+zeek-color -i eth0 \
+  /zeek-scripts/thirdparty/syn-flood \
+  /zeek-scripts/thirdparty/bro-simple-scan/scripts
+```
 
 ---
 

@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
 stdbuf -oL zeek "$@" | perl -pe 'BEGIN { $| = 1 }
-  s/\[SYN FLOOD START\]/\e[31m$&\e[0m/g;
-  s/\[SYN FLOOD STATUS\]/\e[33m$&\e[0m/g;
-  s/\[SYN FLOOD END\]/\e[32m$&\e[0m/g;
+  # SYN Flood
+  s/\[SYN FLOOD START\]/\e[31m$&\e[0m/g;   # 赤
+  s/\[SYN FLOOD STATUS\]/\e[33m$&\e[0m/g;  # 黄
+  s/\[SYN FLOOD END\]/\e[32m$&\e[0m/g;     # 緑
+
+  # Scan detection
+  s/\[SCAN ADDRESS\]/\e[35m$&\e[0m/g;      # マゼンタ（多数ホスト）
+  s/\[SCAN PORT\]/\e[36m$&\e[0m/g;         # シアン（多数ポート）
+  s/\[SCAN RANDOM\]/\e[34m$&\e[0m/g;       # 青（ランダムスキャン）
 '

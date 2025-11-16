@@ -9,6 +9,8 @@ RUN apt update && \
       slowhttptest \
       hping3 \
       patator \
+      hydra \
+      curl \
       nmap \
       vim \
       nano \

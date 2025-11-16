@@ -229,6 +229,26 @@ function add_scan_attempt(scanner: addr, attempt: Attempt)
 		local note = generate_notice(scanner, si);
 		if ( is_knockkock )
 			note$msg = fmt("kk: %s", note$msg);
+
+        # ★ タグ付きリアルタイム出力
+		local tag = "";
+
+		if ( note$note == Address_Scan )
+			tag = "[SCAN ADDRESS]";     # 多数ホストに同一ポートでスキャン
+		else if ( note$note == Port_Scan )
+			tag = "[SCAN PORT]";        # 1ホストに多数ポート
+		else if ( note$note == Random_Scan )
+			tag = "[SCAN RANDOM]";      # 複数ホスト・複数ポート
+		else
+			tag = "[SCAN]";
+
+		print fmt("%s ts=%.6f scanner=%s side=%s msg=\"%s\"",
+		    tag,
+		    network_time(),
+		    scanner,
+		    note$sub,
+		    note$msg
+		);
 		NOTICE(note);
 		delete attacks[scanner];
 		known_scanners[scanner] = 1hrs;
@@ -248,6 +268,8 @@ function add_scan(id: conn_id)
 	local scanner      = id$orig_h;
 	local victim       = id$resp_h;
 	local scanned_port = id$resp_p;
+
+    print fmt("[DEBUG] add_scan called: %s -> %s:%s", scanner, victim, scanned_port);
 
 	if ( scanner in known_scanners )
 		return;
