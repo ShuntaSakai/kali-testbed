@@ -66,6 +66,7 @@ export {
 
 	## The threshold of the unique number of host+ports a local scanning host
 	## has to have failed connections with
+	
 	## local_scan_threshold の設定値とテスト方法のまとめ
     ##
     ## 元々のデフォルト値は '250' でしたが、テスト環境（アクティブホスト9台）では
