@@ -107,6 +107,8 @@ services:
     build: ./zeek
     container_name: zeek
     network_mode: "host"
+    environment:
+      - TZ=Asia/Tokyo
     command: tail -f /dev/null
     cap_add:
       - NET_RAW
