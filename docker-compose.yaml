@@ -25,7 +25,6 @@ services:
     volumes:
       - ./victim/data:/workspace
 
-  # --- ▼ ここから追加 ▼ ---
   victim2:
     build: ./victim
     container_name: victim2
