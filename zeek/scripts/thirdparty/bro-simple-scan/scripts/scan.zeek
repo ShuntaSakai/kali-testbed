@@ -66,7 +66,7 @@ export {
 
 	## The threshold of the unique number of host+ports a local scanning host
 	## has to have failed connections with
-	
+
 	## local_scan_threshold の設定値とテスト方法のまとめ
     ##
     ## 元々のデフォルト値は '250' でしたが、テスト環境（アクティブホスト9台）では
@@ -286,9 +286,9 @@ function add_scan_attempt(scanner: addr, attempt: Attempt)
 		else
 			tag = "[SCAN]";
 
-		print fmt("%s ts=%.6f scanner=%s side=%s msg=\"%s\"",
+		print fmt("%s ts=%s scanner=%s side=%s msg=\"%s\"",
 		    tag,
-		    network_time(),
+		    strftime("%Y-%m-%d %H:%M:%S", network_time()),
 		    scanner,
 		    note$sub,
 		    note$msg

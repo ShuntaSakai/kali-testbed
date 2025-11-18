@@ -62,8 +62,8 @@ event new_connection(c: connection)
 		{
 			NOTICE([$note=SynFloodStart, $src=ip, $msg=msg]);
 			# タグ付きの標準出力
-			print fmt("[SYN FLOOD START]  ts=%.6f victim=%s msg=\"%s\"",
-				network_time(), ip, msg);
+			print fmt("[SYN FLOOD START]  ts=%s victim=%s msg=\"%s\"",
+				strftime("%Y-%m-%d %H:%M:%S", network_time()), ip, msg);
 
 			# ★ ここで current_victims[ip] を必ず初期化しておく
 			if ( ip !in current_victims )
@@ -94,8 +94,8 @@ event check_synflood()
 		{
 			NOTICE([$note=SynFloodEnd, $src=ip, $n=num, $msg=msg]);
 			# タグ付きの標準出力
-			print fmt("[SYN FLOOD END]    ts=%.6f victim=%s n=%d msg=\"%s\"",
-				network_time(), ip, num, msg);
+			print fmt("[SYN FLOOD END]    ts=%s victim=%s n=%d msg=\"%s\"",
+				strftime("%Y-%m-%d %H:%M:%S", network_time()), ip, num, msg);
 
 			delete current_victims[ip];
 			#uninstall_dst_addr_filter(ip);
@@ -125,8 +125,8 @@ event report_synflood()
 			ip, est_num_conn, interv);
 		NOTICE([$note=SynFloodStatus, $src=ip, $n=num, $msg=msg]);
 		# タグ付きの標準出力
-		print fmt("[SYN FLOOD STATUS] ts=%.6f victim=%s n=%d msg=\"%s\"",
-			network_time(), ip, num, msg);
+		print fmt("[SYN FLOOD STATUS] ts=%s victim=%s n=%d msg=\"%s\"",
+			strftime("%Y-%m-%d %H:%M:%S", network_time()), ip, num, msg);
 	}
 
 	clear_table(accumulated_conn_attempts);

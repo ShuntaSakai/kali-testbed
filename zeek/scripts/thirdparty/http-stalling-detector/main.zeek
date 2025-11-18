@@ -58,8 +58,8 @@ event zeek_init()
 	                  		local r = result["http.stalling.attacker"];
 
 							# ★ タグ付きリアルタイム出力(攻撃者検知時)
-							print fmt("[HTTP STALL ATTACKER] ts=%.6f attacker=%s msg=\"HTTP stalling attack detected (count=%.0f)\"", 
-                                network_time(), key$host, r$num + 0.0);
+							print fmt("[HTTP STALL ATTACKER] ts=%s attacker=%s msg=\"HTTP stalling attack detected (count=%.0f)\"", 
+                                strftime("%Y-%m-%d %H:%M:%S", network_time()), key$host, r$num + 0.0);
 							
 	                  		NOTICE([$note=Attacker,
 	                  		        $msg="An HTTP stalling attacker was discovered!",
@@ -82,8 +82,8 @@ event zeek_init()
 	                  		local r = result["http.stalling.victim"];
 
 							# ★ タグ付きリアルタイム出力(被害者検知時)
-                            print fmt("[HTTP STALL VICTIM] ts=%.6f victim=%s msg=\"Targeted by HTTP stalling attack (count=%.0f)\"", 
-                                network_time(), key$host, r$num + 0.0);
+                            print fmt("[HTTP STALL VICTIM] ts=%s victim=%s msg=\"Targeted by HTTP stalling attack (count=%.0f)\"", 
+                                strftime("%Y-%m-%d %H:%M:%S", network_time()), key$host, r$num + 0.0);
 							
 	                  		NOTICE([$note=Victim,
 	                  		        $msg="An HTTP stalling victim was discovered!",
