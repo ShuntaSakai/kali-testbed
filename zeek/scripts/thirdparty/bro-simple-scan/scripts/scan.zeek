@@ -66,7 +66,50 @@ export {
 
 	## The threshold of the unique number of host+ports a local scanning host
 	## has to have failed connections with
-	const local_scan_threshold = 250 &redef;
+	## local_scan_threshold の設定値とテスト方法のまとめ
+    ##
+    ## 元々のデフォルト値は '250' でしたが、テスト環境（アクティブホスト9台）では
+    ## 検知が難しいため、テスト内容に応じて値を変更します。
+    ##
+    ## --------------------------------------------------------------------------
+    ## 1. [SCAN PORT] および [SCAN ADDRESS] のテスト
+    ## --------------------------------------------------------------------------
+    ## const local_scan_threshold = 5 &redef;
+    ##
+    ## 閾値を '5' に設定。
+    ##
+    ## [SCAN PORT] 発火コマンド:
+    ## nmap -sS -p- 172.30.0.20
+    ## 理由: 1台のホストに約65,000回試行するため、閾値(5)を余裕で超える。
+    ##       |victims|=1, |ports|>5 のため [PORT] に分類される。
+    ##
+    ## [SCAN ADDRESS] 発火コマンド:
+    ## nmap -sS -p 80 -Pn 172.30.0.0/24
+    ## 理由: 8台のアクティブホストに1ポートで試行 (試行回数 8回)。
+    ##       閾値(5)を超え、|ports|=1 のため [ADDRESS] に分類される。
+    ##
+    ## --------------------------------------------------------------------------
+    ## 2. [SCAN RANDOM] のテスト
+    ## --------------------------------------------------------------------------
+    ## const local_scan_threshold = 45 &redef;
+    ##
+    ## 閾値を '45' に設定。
+    ##
+    ## [SCAN RANDOM] 発火コマンド:
+    ## nmap -sS -p 80,443,22,21,25,110 -Pn 172.30.0.0/24 (6ポート指定)
+    ##
+    ## 理由:
+    ## 1. attacker自身(172.30.0.10)へのスキャンはZeekで観測されない。
+    ## 2. 観測可能な試行回数は「8ホスト × 6ポート = 48回」となる。
+    ## 3. 閾値を '45' に設定すると、nmapが5ポート分のスキャン (8*5=40回) を
+    ##    終えた後、6ポート目のスキャン (41〜48回目) の途中で検知が発火する。
+    ## 4. これにより、Zeekは |victims|=8, |ports|=6 のデータを分析でき、
+    ##    |victims|>5 かつ |ports|>5 を満たすため [RANDOM] に分類される。
+    ##
+    ## (もし閾値が '5' のままだと、ポート80のスキャン中 (試行5回目) に
+    ##  [SCAN ADDRESS] として早期検知されてしまうため、意図的に閾値を上げる)
+    ## --------------------------------------------------------------------------
+	const local_scan_threshold = 5 &redef;
 
 	## The threshold of the unique number of host+ports a remote scanning host
 	## has to have failed connections with if it has passed dark_host_threshold
@@ -268,8 +311,6 @@ function add_scan(id: conn_id)
 	local scanner      = id$orig_h;
 	local victim       = id$resp_h;
 	local scanned_port = id$resp_p;
-
-    print fmt("[DEBUG] add_scan called: %s -> %s:%s", scanner, victim, scanned_port);
 
 	if ( scanner in known_scanners )
 		return;

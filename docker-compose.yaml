@@ -25,15 +25,93 @@ services:
     volumes:
       - ./victim/data:/workspace
 
-  zeek:
-    build: ./zeek
-    container_name: zeek
+  # --- ▼ ここから追加 ▼ ---
+  victim2:
+    build: ./victim
+    container_name: victim2
     command: tail -f /dev/null
     cap_add:
       - NET_RAW
       - NET_ADMIN
     networks:
       testnet_static:
+        ipv4_address: 172.30.0.21
+    volumes:
+      - ./victim/data:/workspace
+
+  victim3:
+    build: ./victim
+    container_name: victim3
+    command: tail -f /dev/null
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    networks:
+      testnet_static:
+        ipv4_address: 172.30.0.22
+    volumes:
+      - ./victim/data:/workspace
+
+  victim4:
+    build: ./victim
+    container_name: victim4
+    command: tail -f /dev/null
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    networks:
+      testnet_static:
+        ipv4_address: 172.30.0.23
+    volumes:
+      - ./victim/data:/workspace
+
+  victim5:
+    build: ./victim
+    container_name: victim5
+    command: tail -f /dev/null
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    networks:
+      testnet_static:
+        ipv4_address: 172.30.0.24
+    volumes:
+      - ./victim/data:/workspace
+
+  victim6:
+    build: ./victim
+    container_name: victim6
+    command: tail -f /dev/null
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    networks:
+      testnet_static:
+        ipv4_address: 172.30.0.25
+    volumes:
+      - ./victim/data:/workspace
+
+  victim7:
+    build: ./victim
+    container_name: victim7
+    command: tail -f /dev/null
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    networks:
+      testnet_static:
+        ipv4_address: 172.30.0.26
+    volumes:
+      - ./victim/data:/workspace
+
+  zeek:
+    build: ./zeek
+    container_name: zeek
+    network_mode: "host"
+    command: tail -f /dev/null
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
     volumes:
       - ./zeek/logs:/zeek-logs
       - ./zeek/scripts:/zeek-scripts

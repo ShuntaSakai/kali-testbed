@@ -108,7 +108,7 @@ Zeek ログのカラー表示ツールをホスト側から提供
 ## 🧪 使用例
 ### リアルタイム監視用スクリプト
 ```bash
-zeek-color -i eth0 \
+zeek-color -i [`ip a`で調べた、attacker と victim が接続されているDockerブリッジのインターフェース名] \
   /zeek-scripts/thirdparty/syn-flood \
   /zeek-scripts/thirdparty/bro-simple-scan/scripts
 ```
@@ -130,6 +130,7 @@ Zeek の解析はすべて `testnet_static` 内に限定されます。
 | `zeek -r file.pcap`            | pcap のオフライン解析                |
 | `zeek -r file.pcap script.zeek`         | カスタムスクリプト適用 |
 | `less conn.log` | 通信ログの確認                     |
+| `ip a`          | ネットワークインターフェース（NIC）と、それに割り当てられたIPアドレスなどの情報を一覧表示 | 
 ---
 
 ## 📌 バージョン情報
