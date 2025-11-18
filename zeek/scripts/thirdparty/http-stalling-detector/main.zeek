@@ -39,6 +39,11 @@ event zeek_init()
 	                  $threshold_crossed(key: SumStats::Key, result: SumStats::Result) =
 	                  	{
 	                  		local r = result["http.stalling.attacker"];
+
+							# ★ タグ付きリアルタイム出力(攻撃者検知時)
+							print fmt("[HTTP STALL ATTACKER] ts=%.6f attacker=%s msg=\"HTTP stalling attack detected (count=%.0f)\"", 
+                                network_time(), key$host, r$num);
+							
 	                  		NOTICE([$note=Attacker,
 	                  		        $msg="An HTTP stalling attacker was discovered!",
 	                  		        $src=key$host,
@@ -58,6 +63,11 @@ event zeek_init()
 	                  $threshold_crossed(key: SumStats::Key, result: SumStats::Result) =
 	                  	{
 	                  		local r = result["http.stalling.victim"];
+
+							# ★ タグ付きリアルタイム出力(被害者検知時)
+                            print fmt("[HTTP STALL VICTIM] ts=%.6f victim=%s msg=\"Targeted by HTTP stalling attack (count=%.0f)\"", 
+                                network_time(), key$host, r$num);
+							
 	                  		NOTICE([$note=Victim,
 	                  		        $msg="An HTTP stalling victim was discovered!",
 	                  		        $src=key$host,

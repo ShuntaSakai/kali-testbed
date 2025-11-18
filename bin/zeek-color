@@ -10,4 +10,8 @@ stdbuf -oL zeek "$@" | perl -pe 'BEGIN { $| = 1 }
   s/\[SCAN ADDRESS\]/\e[35m$&\e[0m/g;      # マゼンタ（多数ホスト）
   s/\[SCAN PORT\]/\e[36m$&\e[0m/g;         # シアン（多数ポート）
   s/\[SCAN RANDOM\]/\e[34m$&\e[0m/g;       # 青（ランダムスキャン）
+
+  # HTTP Stalling detection
+  s/\[HTTP STALL ATTACKER\]/\e[1;31m$&\e[0m/g; # 太字の赤 (攻撃者)
+  s/\[HTTP STALL VICTIM\]/\e[1;33m$&\e[0m/g;   # 太字の黄 (被害者)
 '
