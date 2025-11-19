@@ -82,6 +82,8 @@ event new_connection(c: connection)
 
 event check_synflood()
 {
+	local to_delete: set[addr];
+	
 	for ( ip in current_victims )
 	{
 		local num = |current_victims[ip]|;
@@ -97,11 +99,13 @@ event check_synflood()
 			print fmt("[SYN FLOOD END]    ts=%s victim=%s n=%d msg=\"%s\"",
 				strftime("%Y-%m-%d %H:%M:%S", network_time()), ip, num, msg);
 
-			delete current_victims[ip];
+			add to_delete[ip];
 			#uninstall_dst_addr_filter(ip);
 			#uninstall_src_addr_filter(ip);
 		}
 	}
+	for ( ip in to_delete )
+        delete current_victims[ip];
 
 	clear_table(conn_attempts);
 	schedule SYNFLOOD_INTERVAL { check_synflood() };
