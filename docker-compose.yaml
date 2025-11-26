@@ -103,6 +103,20 @@ services:
     volumes:
       - ./victim/data:/workspace
 
+  victim_apache:
+    build: ./victim_apache
+    container_name: victim_apache
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    networks:
+      testnet_static:
+        ipv4_address: 172.30.0.27
+    ports:
+      - "8080:80"
+    volumes:
+      - ./victim_apache/data:/workspace
+
   zeek:
     build: ./zeek
     container_name: zeek
